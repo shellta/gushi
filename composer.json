@@ -1,0 +1,22 @@
+{
+    "name": "shellta/spider",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Shawn Zhan",
+            "email": "javascript@live.it"
+        }
+    ],
+    "require": {
+        "symfony/dom-crawler": "^4.1",
+        "symfony/css-selector": "^4.1"
+    },
+    "require-dev": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "autoload" : {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
