@@ -2,9 +2,6 @@
 
 namespace App;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Response;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Spider
@@ -24,15 +21,7 @@ class Spider
 
     private $suffix;
 
-    /**
-     * @var Response
-     */
     private $response;
-
-    /**
-     * @var Client
-     */
-    private $client;
 
     private $total;
 
@@ -53,12 +42,6 @@ class Spider
             'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36'
         ];
 
-        $this->client = new Client([
-            'headers' => $this->headers,
-            'timeout' => 5.0,
-            'verify' => false,
-            'cookies' => true
-        ]);
     }
 
     public static function getInstance()
@@ -106,16 +89,20 @@ class Spider
 
     private function sendRequest()
     {
-        $response = null;
-
         $uri = $this->baseUrl . $this->targetUrl . $this->page . $this->suffix;
 
-        try {
-            $response = $this->client->request('GET', $uri);
-        } catch (GuzzleException $e) {
-        }
+        $ch = curl_init();
 
-        $this->response = $response;
+        curl_setopt($ch, CURLOPT_URL, $uri);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $this->response = curl_exec($ch);
+
+        curl_close($ch);
 
         return $this;
     }
@@ -124,8 +111,7 @@ class Spider
     {
         $values = [];
 
-        $html = $this->response->getBody()->getContents();
-        $crawler = new Crawler($html);
+        $crawler = new Crawler($this->response);
 
         if (is_null($this->total)) {
             $this->total = (int)$crawler->filter('#sumPage')->first()->text();
@@ -134,12 +120,12 @@ class Spider
         $crawler->filter('.main3 .left .sons')
             ->reduce(function (Crawler $node, $i) use (&$values) {
                 $value = [
-                    'title'        => '',
-                    'dynasty'      => '',
-                    'author'       => '',
+                    'title' => '',
+                    'dynasty' => '',
+                    'author' => '',
                     'content_text' => '',
                     'content_html' => '',
-                    'tags'         => ''
+                    'tags' => ''
                 ];
 
                 // 标题
