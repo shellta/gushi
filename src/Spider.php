@@ -32,14 +32,13 @@ class Spider
         $this->suffix = '.aspx';
 
         $this->headers = [
-            'upgrade-insecure-requests' => '1',
-            'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-            'accept-encoding' => 'gzip, deflate, br',
-            'accept-language' => 'zh-CN,zh;q=0.9',
-            'cache-control' => 'max-age=0',
-            'dnt' => '1',
-            'referer' => 'https://www.gushiwen.org/shiwen/default_3A1A1.aspx',
-            'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36'
+            'upgrade-insecure-requests: 1',
+            'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'accept-language: zh-CN,zh;q=0.9',
+            'cache-control: max-age=0',
+            'dnt: 1',
+            'referer: https://www.gushiwen.org/shiwen/default_3A1A1.aspx',
+            'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36'
         ];
 
     }
